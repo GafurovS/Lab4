@@ -278,7 +278,6 @@ namespace Lab4
 					}
 				}
 			}
-			Console.WriteLine($"SigmaM_33 := {Sigma_mn[2,2]}");
 			return Sigma_mn;
 		}
 

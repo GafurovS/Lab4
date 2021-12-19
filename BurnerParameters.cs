@@ -85,7 +85,12 @@ namespace Lab4
 
 		public static double FindOptimalMaterialStrength(MaterialParameters material1, MaterialParameters material2)
 		{
-			var optimeMaterialStrength = Math.Max(FindMaterialStrength(material1), FindMaterialStrength(material2));
+			Console.WriteLine("Результаты каждого шага алгоритма для первого минерала");
+			var materialStrength1 = FindMaterialStrength(material1);
+			Console.WriteLine("Нажмите любую клавишу для вывода каждого шага алгоритма для второго минерала");
+			Console.ReadKey();
+			var materialStrength2 = FindMaterialStrength(material2);
+			var optimeMaterialStrength = Math.Max(materialStrength1, materialStrength2);
 			Console.WriteLine($"Конечный предел прочности материала := {optimeMaterialStrength}");
 			return optimeMaterialStrength;
 		}
