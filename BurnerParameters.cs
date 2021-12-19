@@ -2,8 +2,6 @@
 using System.IO;
 
 
-
-
 namespace Lab4
 {
 	public class BurnerParameters
@@ -81,12 +79,15 @@ namespace Lab4
 			var mineralElasticModuleTensor = MaterialParameters.ConvertElasticModuleMineralsTensor(mineralElasticityModule);
 			var mineralElasticModuleTensorWithAddition = MaterialParameters.ConvertElasticModuleMineralsTensorWithAddition(inversedMatrix);
 			var sigma33 = MaterialParameters.FindSigma33(mineralElasticModuleTensor, mineralElasticModuleTensorWithAddition, externalStressField, material.limit);
+			Console.WriteLine($"Предел прочности материала := {sigma33}");
 			return sigma33;
 		}
 
 		public static double FindOptimalMaterialStrength(MaterialParameters material1, MaterialParameters material2)
 		{
-			return Math.Max(FindMaterialStrength(material1), FindMaterialStrength(material2));
+			var optimeMaterialStrength = Math.Max(FindMaterialStrength(material1), FindMaterialStrength(material2));
+			Console.WriteLine($"Конечный предел прочности материала := {optimeMaterialStrength}");
+			return optimeMaterialStrength;
 		}
 
 		public static LRFuzzyNumber FindDestructionTemperature(MaterialParameters material1, MaterialParameters material2)

@@ -1,4 +1,7 @@
-﻿namespace Lab4
+﻿using System;
+
+
+namespace Lab4
 {
 	public class MaterialParameters
 	{
@@ -23,23 +26,27 @@
 
 		public MaterialParameters()
 		{
-			
+
 		}
-		
+
 		public static double GetMu(double Vp, double Vs, double Ro)
 		{
-			return Ro * Vs * Vs;
+			var mu = Ro * Vs * Vs;
+			Console.WriteLine($"Mu = {mu}");
+			return mu;
 		}
 		public static double GetLambda(double Vp, double Vs, double Ro, double mu)
 		{
-			return Ro * Vp * Vp - 2 * mu;
+			var lambda = Ro * Vp * Vp - 2 * mu;
+			Console.WriteLine($"Lambda = {lambda}");
+			return lambda;
 		}
 		public static double[,] CreateExternalStressField()
 		{
 			double[,] externalStressField = new double[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 10 } };
 			return externalStressField;
 		}
-		public static double[,] FindMineralElasticityModule(double lambda, double mu) //скорость проточных и параллельных волн в минералах. Плотность кг/м3
+		public static double[,] FindMineralElasticityModule(double lambda, double mu) 
 		{
 			double[,] C = new double[6, 6]
 			{
@@ -50,10 +57,12 @@
 				{0, 0, 0, 0, mu, 0},
 				{0, 0, 0, 0, 0, mu}
 			};
+			Console.WriteLine("тензор модулей упругости минерала:");
+			WriteArray(C);
 			return C;
 		}
 
-		public static double[,] FindMineralElasticityModuleWithAddition(double lambda, double mu1, double p, double f1, double f2) //p Задается пользователем - среднее давление газа или жидкости во включениях минерала
+		public static double[,] FindMineralElasticityModuleWithAddition(double lambda, double mu1, double p, double f1, double f2)
 		{
 			var K1 = lambda + 2 * mu1 / 3;
 			var K2 = p;
@@ -62,6 +71,8 @@
 			var mumwp = mu1 + (f2 / (1 / (mu2 - mu1) + (2 * f1 * (K1 + 2 * mu1) / (5 * mu1 * (K1 + 4 * mu1 / 3)))));
 			var lambdamwp = Kmwp - 2 * mumwp / 3;
 			double[,] Cmwp = FindMineralElasticityModule(lambdamwp, mumwp);
+			Console.WriteLine("эффективный тензор модулей упругости минералов с газовыми или жидкостными включениями(в матричной форме):");
+			WriteArray(Cmwp);
 			return Cmwp;
 		}
 
@@ -87,6 +98,8 @@
 					Smwp[i, j] = reverseMatrix[i, j];
 				}
 			}
+			Console.WriteLine("Обратная матрица:");
+			WriteArray(Smwp);
 			return Smwp;
 		}
 
@@ -156,6 +169,8 @@
 					Cijkl[i1, j1, k1, l1] = Cm[i, j];
 				}
 			}
+			Console.WriteLine("Преобразованный тензор модулей упругости минерала:");
+			WriteArray(Cijkl);
 			return Cijkl;
 		}
 
@@ -225,6 +240,8 @@
 					Sijkl[i1, j1, k1, l1] = Smwp[i, j];
 				}
 			}
+			Console.WriteLine("Преобразованный тензор модулей упругости минерала с газовыми или жидкостными включениями: ");
+			WriteArray(Sijkl);
 			return Sijkl;
 		}
 
@@ -261,7 +278,7 @@
 					}
 				}
 			}
-
+			Console.WriteLine($"SigmaM_33 := {Sigma_mn[2,2]}");
 			return Sigma_mn;
 		}
 
@@ -276,6 +293,38 @@
 			{
 				Sigma_kl[2, 2] += 1;
 				return FindSigma33(Cmnij, Sijkl, Sigma_kl, limit);
+			}
+		}
+
+		public static void WriteArray(double[,] array)
+		{
+			for (int i = 0; i < array.GetLength(0); i++)
+			{
+				for (int j = 0; j < array.GetLength(1); j++)
+				{
+					Console.Write(array[i, j] + " ");
+				}
+				Console.WriteLine();
+			}
+		}
+
+		public static void WriteArray(double[,,,] array)
+		{
+			for (int i = 0; i < array.GetLength(0); i++)
+			{
+				for (int j = 0; j < array.GetLength(1); j++)
+				{
+					for (int k = 0; k < array.GetLength(2); k++)
+					{
+						for (int l = 0; l < array.GetLength(3); l++)
+						{
+							Console.Write(array[i, j, k, l] + " ");
+						}
+						Console.WriteLine();
+					}
+					Console.WriteLine();
+				}
+				Console.WriteLine();
 			}
 		}
 	}
