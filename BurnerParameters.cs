@@ -37,11 +37,11 @@ namespace Lab4
 			material.vp = Convert.ToDouble(materialParameters[0]);
 			material.vs = Convert.ToDouble(materialParameters[1]);
 			material.ro = Convert.ToDouble(materialParameters[2]);
-			Console.WriteLine("Введите среднее давление газа или жидкости во включениях минерала: p = ");
+			Console.WriteLine("Введите среднее давление газа или жидкости во включениях минерала: p(Па) = ");
 			material.p = Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("Введите объемную долю минерала: f1 = ");
+			Console.WriteLine("Введите объемную долю твердого вещества от 0 до 1: f1 = ");
 			material.f1 = Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("Введите объемную долю примеси: f2 = ");
+			Console.WriteLine("Введите объемную долю примеси 0 до 1: f2 = ");
 			material.f2 = Convert.ToDouble(Console.ReadLine());
 			Console.WriteLine("Введите предел прочности минерала");
 			material.limit = Convert.ToDouble(Console.ReadLine());
@@ -73,7 +73,7 @@ namespace Lab4
 			var externalStressField = MaterialParameters.CreateExternalStressField();
 			var mu = MaterialParameters.GetMu(material.vp, material.vs, material.ro);
 			var lambda = MaterialParameters.GetLambda(material.vp, material.vs, material.ro, mu);
-			var mineralElasticityModule = MaterialParameters.FindMineralElasticityModule(lambda, mu);
+			var mineralElasticityModule = MaterialParameters.FindMineralElasticityModule(lambda, mu, true);
 			var mineralElasticityModuleWithAddition = MaterialParameters.FindMineralElasticityModuleWithAddition(lambda, mu, material.p, material.f1, material.f2);
 			var inversedMatrix = MaterialParameters.FindInversedMatrix(mineralElasticityModuleWithAddition);
 			var mineralElasticModuleTensor = MaterialParameters.ConvertElasticModuleMineralsTensor(mineralElasticityModule);
@@ -102,11 +102,11 @@ namespace Lab4
 			var sigma_a = Convert.ToDouble(Console.ReadLine());
 			Console.WriteLine("бета =");
 			var sigma_b = Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("Введите коэффицент Пуассона =");
+			Console.WriteLine("Введите коэффицент Пуассона от 0 до 1 =");
 			var gamma = 1 - Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("Введите коэффицент теплового расширения породы =");
+			Console.WriteLine("Введите коэффицент теплового расширения породы(1/С) =");
 			var beta = Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("Введите модуль упругости =");
+			Console.WriteLine("Введите модуль упругости(Па) =");
 			var e = Convert.ToDouble(Console.ReadLine());
 
 			LRFuzzyNumber fuzzySigma = new LRFuzzyNumber(sigma, sigma_a, sigma_b);

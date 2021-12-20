@@ -43,10 +43,10 @@ namespace Lab4
 		}
 		public static double[,] CreateExternalStressField()
 		{
-			double[,] externalStressField = new double[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 10 } };
+			double[,] externalStressField = new double[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 1000 } };
 			return externalStressField;
 		}
-		public static double[,] FindMineralElasticityModule(double lambda, double mu) 
+		public static double[,] FindMineralElasticityModule(double lambda, double mu, bool write = false) 
 		{
 			double[,] C = new double[6, 6]
 			{
@@ -57,8 +57,11 @@ namespace Lab4
 				{0, 0, 0, 0, mu, 0},
 				{0, 0, 0, 0, 0, mu}
 			};
-			Console.WriteLine("тензор модулей упругости минерала:");
-			WriteArray(C);
+			if (write)
+			{
+				Console.WriteLine("тензор модулей упругости минерала:");
+				WriteArray(C);
+			}
 			return C;
 		}
 
@@ -151,6 +154,7 @@ namespace Lab4
 						Cijkl[2, 1, 1, 2] = Cm[i, j];
 						Cijkl[1, 2, 2, 1] = Cm[i, j];
 						Cijkl[2, 1, 2, 1] = Cm[i, j];
+						continue;
 					}
 					if (i == 4 && j == 4)
 					{
@@ -158,6 +162,7 @@ namespace Lab4
 						Cijkl[2, 0, 0, 2] = Cm[i, j];
 						Cijkl[0, 2, 2, 0] = Cm[i, j];
 						Cijkl[0, 2, 0, 2] = Cm[i, j];
+						continue;
 					}
 					if (i == 5 && j == 5)
 					{
@@ -165,6 +170,7 @@ namespace Lab4
 						Cijkl[0, 1, 1, 0] = Cm[i, j];
 						Cijkl[1, 0, 0, 1] = Cm[i, j];
 						Cijkl[1, 0, 1, 0] = Cm[i, j];
+						continue;
 					}
 					Cijkl[i1, j1, k1, l1] = Cm[i, j];
 				}
@@ -222,6 +228,7 @@ namespace Lab4
 						Sijkl[2, 1, 1, 2] = Smwp[i, j] * 4;
 						Sijkl[1, 2, 2, 1] = Smwp[i, j] * 4;
 						Sijkl[2, 1, 2, 1] = Smwp[i, j] * 4;
+						continue;
 					}
 					if (i == 4 && j == 4)
 					{
@@ -229,6 +236,7 @@ namespace Lab4
 						Sijkl[2, 0, 0, 2] = Smwp[i, j] * 4;
 						Sijkl[0, 2, 2, 0] = Smwp[i, j] * 4;
 						Sijkl[0, 2, 0, 2] = Smwp[i, j] * 4;
+						continue;
 					}
 					if (i == 5 && j == 5)
 					{
@@ -236,8 +244,10 @@ namespace Lab4
 						Sijkl[0, 1, 1, 0] = Smwp[i, j] * 4;
 						Sijkl[1, 0, 0, 1] = Smwp[i, j] * 4;
 						Sijkl[1, 0, 1, 0] = Smwp[i, j] * 4;
+						continue;
 					}
 					Sijkl[i1, j1, k1, l1] = Smwp[i, j];
+					
 				}
 			}
 			Console.WriteLine("Преобразованный тензор модулей упругости минерала с газовыми или жидкостными включениями: ");
@@ -290,18 +300,28 @@ namespace Lab4
 			}
 			else
 			{
-				Sigma_kl[2, 2] += 1;
+				Sigma_kl[2, 2] += 1000;
 				return FindSigma33(Cmnij, Sijkl, Sigma_kl, limit);
 			}
 		}
 
 		public static void WriteArray(double[,] array)
 		{
+			var a = 25;
 			for (int i = 0; i < array.GetLength(0); i++)
 			{
 				for (int j = 0; j < array.GetLength(1); j++)
 				{
-					Console.Write(array[i, j] + " ");
+					if (array[i,j] != 0)
+					{
+						var b = array[i, j].ToString().Length;
+						var c = a - b + 1;
+						Console.Write(array[i, j] + new string(' ', c));
+					}
+					else
+					{
+						Console.Write(array[i, j] + new string(' ', a));
+					}
 				}
 				Console.WriteLine();
 			}
@@ -309,6 +329,7 @@ namespace Lab4
 
 		public static void WriteArray(double[,,,] array)
 		{
+			var a = 25;
 			for (int i = 0; i < array.GetLength(0); i++)
 			{
 				for (int j = 0; j < array.GetLength(1); j++)
@@ -317,13 +338,20 @@ namespace Lab4
 					{
 						for (int l = 0; l < array.GetLength(3); l++)
 						{
-							Console.Write(array[i, j, k, l] + " ");
+							if (array[i, j, k, l] != 0)
+							{
+								var b = array[i, j, k, l].ToString().Length;
+								var c = a - b + 1;
+								Console.Write(array[i, j, k, l] + new string(' ', c - 3));
+							}
+							else
+							{
+								Console.Write(array[i, j, k, l] + new string(' ', a - 3));
+							}
 						}
-						Console.WriteLine();
 					}
 					Console.WriteLine();
 				}
-				Console.WriteLine();
 			}
 		}
 	}
