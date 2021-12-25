@@ -34,14 +34,14 @@ namespace Lab4
 			string line = lines[Convert.ToInt32(Console.ReadLine()) - 1];
 			var materialParameters = line.Split(" ");
 			var material = new MaterialParameters();
-			material.vp = Convert.ToDouble(materialParameters[0]);
-			material.vs = Convert.ToDouble(materialParameters[1]);
+			material.vp = Convert.ToDouble(materialParameters[0]) * 1000;
+			material.vs = Convert.ToDouble(materialParameters[1]) * 1000;
 			material.ro = Convert.ToDouble(materialParameters[2]);
 			Console.WriteLine("Введите среднее давление газа или жидкости во включениях минерала: p(Па) = ");
 			material.p = Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("Введите объемную долю твердого вещества в долях (от 0 до 1): f1 = ");
+			Console.WriteLine("Введите объемную долю твердого вещества в долях: f1 = ");
 			material.f1 = Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("Введите объемную долю примеси в долях (от 0 до 1): f2 = ");
+			Console.WriteLine("Введите объемную долю примеси в долях: f2 = ");
 			material.f2 = Convert.ToDouble(Console.ReadLine());
 			Console.WriteLine("Введите предел прочности минерала (Па)");
 			material.limit = Convert.ToDouble(Console.ReadLine());

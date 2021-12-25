@@ -7,7 +7,8 @@ namespace Lab4
 	{
 		static void Main(string[] args)
 		{
-			Console.WriteLine("Выберите действие для первого минерала\n" +
+			Console.WriteLine("Формат ввода чисел: 9999,9999");
+			Console.WriteLine("\nВыберите действие для первого минерала\n" +
 				"1)Выбрать минерал из таблицы \n" +
 				"2)Ввести новый минерал");
 			var tableNumber = Convert.ToInt32(Console.ReadLine());
