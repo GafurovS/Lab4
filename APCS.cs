@@ -39,8 +39,9 @@ namespace Lab4
 				material2 = BurnerParameters.GetNewMaterial();
 			}
 
-			var destructionTemperature = BurnerParameters.FindDestructionTemperature(material1, material2);
-			Console.WriteLine($"Температура разрушения породы = ({destructionTemperature.m};{destructionTemperature.a};{destructionTemperature.b}) градусов Цельсия");
+			var destructionTemperature = BurnerParameters.FindDrivePower(material1, material2);
+			Console.WriteLine($"Мощность привода дробилки = ({destructionTemperature.m};{destructionTemperature.a};{destructionTemperature.b}) Ватт");
+			Console.ReadKey();
 		}
 	}
 }
