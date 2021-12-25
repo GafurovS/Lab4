@@ -39,11 +39,11 @@ namespace Lab4
 			material.ro = Convert.ToDouble(materialParameters[2]);
 			Console.WriteLine("Введите среднее давление газа или жидкости во включениях минерала: p(Па) = ");
 			material.p = Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("Введите объемную долю твердого вещества от 0 до 1: f1 = ");
+			Console.WriteLine("Введите объемную долю твердого вещества в долях (от 0 до 1): f1 = ");
 			material.f1 = Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("Введите объемную долю примеси 0 до 1: f2 = ");
+			Console.WriteLine("Введите объемную долю примеси в долях (от 0 до 1): f2 = ");
 			material.f2 = Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("Введите предел прочности минерала");
+			Console.WriteLine("Введите предел прочности минерала (Па)");
 			material.limit = Convert.ToDouble(Console.ReadLine());
 			return material;
 		}
@@ -85,13 +85,12 @@ namespace Lab4
 
 		public static double FindOptimalMaterialStrength(MaterialParameters material1, MaterialParameters material2)
 		{
-			Console.WriteLine("Результаты каждого шага алгоритма для первого минерала");
+			Console.WriteLine("\n \nРезультаты каждого шага алгоритма для первого минерала");
 			var materialStrength1 = FindMaterialStrength(material1);
-			Console.WriteLine("Нажмите любую клавишу для вывода каждого шага алгоритма для второго минерала");
-			Console.ReadKey();
+			Console.WriteLine("\n \nВывод каждого шага алгоритма для второго минерала");
 			var materialStrength2 = FindMaterialStrength(material2);
 			var optimeMaterialStrength = Math.Max(materialStrength1, materialStrength2);
-			Console.WriteLine($"Конечный предел прочности материала := {optimeMaterialStrength}");
+			Console.WriteLine($"\n \nКонечный предел прочности материала := {optimeMaterialStrength}");
 			return optimeMaterialStrength;
 		}
 

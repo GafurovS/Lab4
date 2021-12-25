@@ -43,7 +43,7 @@ namespace Lab4
 		}
 		public static double[,] CreateExternalStressField()
 		{
-			double[,] externalStressField = new double[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 1000 } };
+			double[,] externalStressField = new double[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
 			return externalStressField;
 		}
 		public static double[,] FindMineralElasticityModule(double lambda, double mu, bool write = false) 
@@ -59,7 +59,7 @@ namespace Lab4
 			};
 			if (write)
 			{
-				Console.WriteLine("тензор модулей упругости минерала:");
+				Console.WriteLine("\nШаг 3. Тензор модулей упругости минерала (в матричной форме):");
 				WriteArray(C);
 			}
 			return C;
@@ -74,7 +74,7 @@ namespace Lab4
 			var mumwp = mu1 + (f2 / (1 / (mu2 - mu1) + (2 * f1 * (K1 + 2 * mu1) / (5 * mu1 * (K1 + 4 * mu1 / 3)))));
 			var lambdamwp = Kmwp - 2 * mumwp / 3;
 			double[,] Cmwp = FindMineralElasticityModule(lambdamwp, mumwp);
-			Console.WriteLine("эффективный тензор модулей упругости минералов с газовыми или жидкостными включениями(в матричной форме):");
+			Console.WriteLine("\nШаг 4. Эффективный тензор модулей упругости минералов с газовыми или жидкостными включениями(в матричной форме):");
 			WriteArray(Cmwp);
 			return Cmwp;
 		}
@@ -101,7 +101,7 @@ namespace Lab4
 					Smwp[i, j] = reverseMatrix[i, j];
 				}
 			}
-			Console.WriteLine("Обратная матрица:");
+			Console.WriteLine("\nШаг 5. Обратная матрица Smwp:");
 			WriteArray(Smwp);
 			return Smwp;
 		}
@@ -175,7 +175,7 @@ namespace Lab4
 					Cijkl[i1, j1, k1, l1] = Cm[i, j];
 				}
 			}
-			Console.WriteLine("Преобразованный тензор модулей упругости минерала:");
+			Console.WriteLine("\nШаг 6. Преобразованный тензор модулей упругости минерала:");
 			WriteArray(Cijkl);
 			return Cijkl;
 		}
@@ -250,59 +250,55 @@ namespace Lab4
 					
 				}
 			}
-			Console.WriteLine("Преобразованный тензор модулей упругости минерала с газовыми или жидкостными включениями: ");
+			Console.WriteLine("\nШаг 7. Преобразованный тензор модулей упругости минерала с газовыми или жидкостными включениями: ");
 			WriteArray(Sijkl);
 			return Sijkl;
 		}
 
-		private static double[,] FindSigmaMN(double[,,,] Cmnij, double[,,,] Sijkl, double[,] Sigma_kl)
-		{
-			double[,] tensorE = new double[3, 3];
-
-			for (int i = 0; i < 3; i++)
-			{
-				for (int j = 0; j < 3; j++)
-				{
-					for (int k = 0; k < 3; k++)
-					{
-						for (int l = 0; l < 3; l++)
-						{
-							tensorE[i, j] += Sijkl[i, j, k, l] * Sigma_kl[k, l];
-						}
-					}
-				}
-			}
-
-			double[,] Sigma_mn = new double[3, 3];
-
-			for (int m = 0; m < 3; m++)
-			{
-				for (int n = 0; n < 3; n++)
-				{
-					for (int i = 0; i < 3; i++)
-					{
-						for (int j = 0; j < 3; j++)
-						{
-							Sigma_mn[m, n] += Cmnij[m, n, i, j] * tensorE[i, j];
-						}
-					}
-				}
-			}
-			return Sigma_mn;
-		}
-
 		public static double FindSigma33(double[,,,] Cmnij, double[,,,] Sijkl, double[,] Sigma_kl, double limit)
 		{
-			var sigma_mn = FindSigmaMN(Cmnij, Sijkl, Sigma_kl);
-			if (sigma_mn[2, 2] >= limit)
-			{
-				return Sigma_kl[2, 2];
-			}
-			else
+			double[,] Sigma_mn = new double[3, 3];
+			do
 			{
 				Sigma_kl[2, 2] += 1000;
-				return FindSigma33(Cmnij, Sijkl, Sigma_kl, limit);
-			}
+				double[,] tensorE = new double[3, 3];
+
+				for (int i = 0; i < 3; i++)
+				{
+					for (int j = 0; j < 3; j++)
+					{
+						for (int k = 0; k < 3; k++)
+						{
+							for (int l = 0; l < 3; l++)
+							{
+								tensorE[i, j] += Sijkl[i, j, k, l] * Sigma_kl[k, l];
+							}
+						}
+					}
+				}
+
+				for (int m = 0; m < 3; m++)
+				{
+					for (int n = 0; n < 3; n++)
+					{
+						for (int i = 0; i < 3; i++)
+						{
+							for (int j = 0; j < 3; j++)
+							{
+								Sigma_mn[m, n] += Cmnij[m, n, i, j] * tensorE[i, j];
+							}
+						}
+					}
+				}
+				if(Sigma_kl[2,2] == 2000)
+				{
+					Console.WriteLine("\nШаг 8. Начальня сигма (m):");
+					WriteArray(Sigma_mn);
+				}
+			} while (Sigma_mn[2, 2] < limit);
+			Console.WriteLine("\nШаг 9. Конечная сигма (m)");
+			WriteArray(Sigma_mn);
+			return Sigma_kl[2, 2];
 		}
 
 		public static void WriteArray(double[,] array)
