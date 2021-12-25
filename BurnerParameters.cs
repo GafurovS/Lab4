@@ -49,7 +49,7 @@ namespace Lab4
 		}
 
 		public static MaterialParameters GetNewMaterial()
-		{ 
+		{
 			Console.WriteLine("Введите скорость параллельных волн в минерале: Vp = ");
 			var vp = Convert.ToDouble(Console.ReadLine());
 			Console.WriteLine("Введите скорость проточных волн в минералах: Vs = ");
@@ -94,28 +94,34 @@ namespace Lab4
 			return optimeMaterialStrength;
 		}
 
-		public static LRFuzzyNumber FindDestructionTemperature(MaterialParameters material1, MaterialParameters material2)
+		public static LRFuzzyNumber FindDrivePower(MaterialParameters material1, MaterialParameters material2)
 		{
-			var sigma = 1.5 * FindOptimalMaterialStrength(material1, material2);
+			var sigma = Math.Pow(FindOptimalMaterialStrength(material1, material2), 2);
 			Console.WriteLine("Введите альфу и бету для предела прочности материала \n альфа =");
 			var sigma_a = Convert.ToDouble(Console.ReadLine());
 			Console.WriteLine("бета =");
 			var sigma_b = Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("Введите коэффицент Пуассона от 0 до 1 =");
-			var gamma = 1 - Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("Введите коэффицент теплового расширения породы(1/С) =");
-			var beta = Convert.ToDouble(Console.ReadLine());
-			Console.WriteLine("Введите модуль упругости(Па) =");
-			var e = Convert.ToDouble(Console.ReadLine());
+			Console.WriteLine("Введите длинну камеры дробления дробилки (м) =");
+			var L = Convert.ToDouble(Console.ReadLine());
+			Console.WriteLine("Введите модуль упругости (Па) =");
+			var E = Convert.ToDouble(Console.ReadLine());
+			Console.WriteLine("Введите диаметр загружаемых кусков материала (м) =");
+			var D = Math.Pow(Convert.ToDouble(Console.ReadLine()), 2);
+			Console.WriteLine("Введите диаметр куска готовго продукта (м) =");
+			var d = Math.Pow(Convert.ToDouble(Console.ReadLine()), 2);
+			Console.WriteLine("Введите частоту вращения эксцентрикового вала (об/с) =");
+			var N = Math.Pow(Convert.ToDouble(Console.ReadLine()), 2);
 
 			LRFuzzyNumber fuzzySigma = new LRFuzzyNumber(sigma, sigma_a, sigma_b);
-			LRFuzzyNumber fuzzyGamma = new LRFuzzyNumber(gamma, 0, 0);
-			LRFuzzyNumber fuzzyBeta = new LRFuzzyNumber(beta, 0, 0);
-			LRFuzzyNumber fuzzyE = new LRFuzzyNumber(e, 0, 0);
+			LRFuzzyNumber fuzzyL = new LRFuzzyNumber(L, 0, 0);
+			LRFuzzyNumber fuzzyE = new LRFuzzyNumber(E, 0, 0);
+			LRFuzzyNumber fuzzyD = new LRFuzzyNumber(D-d, 0, 0);
+			LRFuzzyNumber fuzzyN = new LRFuzzyNumber(N, 0, 0);
 
-			var a = LRFuzzyNumbersOperations.Mupltiply(fuzzySigma, fuzzyGamma);
-			var b = LRFuzzyNumbersOperations.Mupltiply(fuzzyBeta, fuzzyE);
-			var result = LRFuzzyNumbersOperations.Divide(a, b);
+			var a = LRFuzzyNumbersOperations.Mupltiply(fuzzySigma, fuzzyL);
+			var b = LRFuzzyNumbersOperations.Mupltiply(a, fuzzyD);
+			var c = LRFuzzyNumbersOperations.Divide(b, fuzzyE);
+			var result = LRFuzzyNumbersOperations.Mupltiply(c, fuzzyN);
 			return result;
 		}
 	}

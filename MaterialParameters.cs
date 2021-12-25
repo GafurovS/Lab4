@@ -44,6 +44,8 @@ namespace Lab4
 		public static double[,] CreateExternalStressField()
 		{
 			double[,] externalStressField = new double[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
+			Console.WriteLine("\n2. Начальная величина внешнего поля напряжений:");
+			WriteArray(externalStressField);
 			return externalStressField;
 		}
 		public static double[,] FindMineralElasticityModule(double lambda, double mu, bool write = false) 
@@ -59,7 +61,7 @@ namespace Lab4
 			};
 			if (write)
 			{
-				Console.WriteLine("\nШаг 3. Тензор модулей упругости минерала (в матричной форме):");
+				Console.WriteLine("\n3. Тензор модулей упругости минерала (в матричной форме):");
 				WriteArray(C);
 			}
 			return C;
@@ -74,7 +76,7 @@ namespace Lab4
 			var mumwp = mu1 + (f2 / (1 / (mu2 - mu1) + (2 * f1 * (K1 + 2 * mu1) / (5 * mu1 * (K1 + 4 * mu1 / 3)))));
 			var lambdamwp = Kmwp - 2 * mumwp / 3;
 			double[,] Cmwp = FindMineralElasticityModule(lambdamwp, mumwp);
-			Console.WriteLine("\nШаг 4. Эффективный тензор модулей упругости минералов с газовыми или жидкостными включениями(в матричной форме):");
+			Console.WriteLine("\n4. Эффективный тензор модулей упругости минералов с газовыми или жидкостными включениями(в матричной форме):");
 			WriteArray(Cmwp);
 			return Cmwp;
 		}
@@ -101,7 +103,7 @@ namespace Lab4
 					Smwp[i, j] = reverseMatrix[i, j];
 				}
 			}
-			Console.WriteLine("\nШаг 5. Обратная матрица Smwp:");
+			Console.WriteLine("\n5. Обратная матрица Smwp:");
 			WriteArray(Smwp);
 			return Smwp;
 		}
@@ -175,7 +177,7 @@ namespace Lab4
 					Cijkl[i1, j1, k1, l1] = Cm[i, j];
 				}
 			}
-			Console.WriteLine("\nШаг 6. Преобразованный тензор модулей упругости минерала:");
+			Console.WriteLine("\n6. Преобразованный тензор модулей упругости минерала:");
 			WriteArray(Cijkl);
 			return Cijkl;
 		}
@@ -250,7 +252,7 @@ namespace Lab4
 					
 				}
 			}
-			Console.WriteLine("\nШаг 7. Преобразованный тензор модулей упругости минерала с газовыми или жидкостными включениями: ");
+			Console.WriteLine("\n7. Преобразованный тензор модулей упругости минерала с газовыми или жидкостными включениями: ");
 			WriteArray(Sijkl);
 			return Sijkl;
 		}
@@ -292,11 +294,11 @@ namespace Lab4
 				}
 				if(Sigma_kl[2,2] == 2000)
 				{
-					Console.WriteLine("\nШаг 8. Начальня сигма (m):");
+					Console.WriteLine("\n8. Начальня сигма (m):");
 					WriteArray(Sigma_mn);
 				}
 			} while (Sigma_mn[2, 2] < limit);
-			Console.WriteLine("\nШаг 9. Конечная сигма (m)");
+			Console.WriteLine("\n9. Конечная сигма (m)");
 			WriteArray(Sigma_mn);
 			return Sigma_kl[2, 2];
 		}
